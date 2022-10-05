@@ -2,6 +2,7 @@ import booking.constants as const
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from booking.booking_filtration import BookingFiltration
 
 class Booking(webdriver.Chrome):
 	def __init__(self, driver_path=os.getcwd(), teardown=False):
@@ -40,9 +41,26 @@ class Booking(webdriver.Chrome):
 		first_result.click()
 
 	def select_dates(self, check_in_date, check_out_date):
-		check_in_element = self.find_element(By.CSS_SELECTOR, f'td[data-date="{check_in_date}"]')
+		next_calendar_element = self.find_element(By.CSS_SELECTOR, 'div[data-bui-ref="calendar-next"]')
+		prev_calendar_element = self.find_element(By.CSS_SELECTOR, 'div[data-bui-ref="calendar-prev"]')
+		while True:
+			try:
+				check_in_element = self.find_element(By.CSS_SELECTOR, f'td[data-date="{check_in_date}"]')
+			except:
+				for _ in range(2):
+					next_calendar_element.click()
+			else:
+				break
 		check_in_element.click()
-		check_out_element = self.find_element(By.CSS_SELECTOR, f'td[data-date="{check_out_date}"]')
+
+		while True:
+			try:
+				check_out_element = self.find_element(By.CSS_SELECTOR, f'td[data-date="{check_out_date}"]')
+			except:
+				for _ in range(2):
+					next_calendar_element.click()
+			else:
+				break
 		check_out_element.click()
 
 	def select_adults(self, count=1):
@@ -67,3 +85,9 @@ class Booking(webdriver.Chrome):
 	def click_search(self):
 		search_button = self.find_element(By.CSS_SELECTOR, 'button[type="submit"]')
 		search_button.click()
+
+	def apply_filtrations(self):
+		filtration = BookingFiltration(driver=self)
+		filtration.apply_star_rating(4, 5)
+
+		filtration.sort_price_lowest_first()
