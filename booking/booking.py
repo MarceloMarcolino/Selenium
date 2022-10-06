@@ -3,6 +3,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from booking.booking_filtration import BookingFiltration
+from booking.booking_report import BookingReport
 
 class Booking(webdriver.Chrome):
 	def __init__(self, driver_path=os.getcwd(), teardown=False):
@@ -93,3 +94,9 @@ class Booking(webdriver.Chrome):
 		filtration.apply_star_rating(4, 5)
 
 		filtration.sort_price_lowest_first()
+
+	def report_results(self):
+		hotel_boxes = self.find_element(By.CLASS_NAME, 'd4924c9e74')
+
+		report = BookingReport(hotel_boxes)
+		report.pull_titles()
