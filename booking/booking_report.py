@@ -10,7 +10,15 @@ class BookingReport:
 	def pull_deal_boxes(self):
 		return self.boxes_section_element.find_elements(By.CSS_SELECTOR, 'div[data-testid="property-card"]')
 
-	def pull_titles(self):
+	def pull_deal_box_attributes(self):
+		collection = []
 		for deal_box in self.deal_boxes:
-			hotel_name = deal_box.find_element(By.CSS_SELECTOR, 'div[data-testid="title"]').get_attribute('innerHTML').strip()
-			print(hotel_name)
+			# Pulling the hotel name
+			hotel_name = deal_box.find_element(By.CSS_SELECTOR, 'div[data-testid="title"]').get_attribute('innerHTML').strip().replace('&amp;', '&')
+
+			hotel_price = deal_box.find_element(By.CSS_SELECTOR, 'span[class*="fcab3ed991"]').get_attribute('innerHTML').replace('R$&nbsp;', 'R$ ')
+
+			hotel_score = deal_box.find_element(By.CSS_SELECTOR, 'div[class*="b5cd09854e"]').get_attribute('innerHTML').strip()
+
+			collection.append([hotel_name, hotel_price, hotel_score])
+		return collection

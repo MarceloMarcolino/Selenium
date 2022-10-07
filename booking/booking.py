@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from booking.booking_filtration import BookingFiltration
 from booking.booking_report import BookingReport
+from prettytable import PrettyTable
 
 class Booking(webdriver.Chrome):
 	def __init__(self, driver_path=os.getcwd(), teardown=False):
@@ -99,4 +100,6 @@ class Booking(webdriver.Chrome):
 		hotel_boxes = self.find_element(By.CLASS_NAME, 'd4924c9e74')
 
 		report = BookingReport(hotel_boxes)
-		report.pull_titles()
+		table = PrettyTable(field_names=["Hotel Name", "Hotel Price", "Hotel Score"])
+		table.add_rows(report.pull_deal_box_attributes())
+		print(table)

@@ -1,14 +1,16 @@
 from booking.booking import Booking
+from datetime import date
 
 try:
 	with Booking() as bot:
 		#a = 2 / 0
 		bot.land_first_page()
 		bot.change_language(language='pt-br')
+		bot.refresh() # A workaround to let our bot to grab the data properly
 		bot.change_currency(currency='BRL')
-		bot.select_place_to_go('Rio de Janeiro')
-		bot.select_dates(check_in_date='2022-10-05', check_out_date='2022-10-06')
-		bot.select_adults(2)
+		bot.select_place_to_go(input("Para onde você quer ir?"))
+		bot.select_dates(check_in_date=input("Qual a data de check in ?"), check_out_date=input("Qual a data de check out ?"))
+		bot.select_adults(int(input("Quantas pessoas ?")))
 		bot.click_search()
 		bot.apply_filtrations()
 		bot.refresh() # A workaround to let our bot to grab the data properly
